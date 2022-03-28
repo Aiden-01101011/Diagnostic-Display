@@ -11,7 +11,7 @@ MCUFRIEND_kbv tft;
 
 
 
-float coolantTemp = 0;
+String coolantTemp = "";
 char buff[6];
 char buf[20];
 
@@ -32,11 +32,10 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 0){
-    coolantTemp = Serial.readStringUntil('\n').toFloat();
-    dtostrf(coolantTemp, -2, 2, buff);
-    Serial.print(x);
+    coolantTemp = Serial.readStringUntil('\n')
+    Serial.print(coolantTemp);
     tft.setCursor(0, 0);
-    sprintf(buf, "Temp: %03s ", buff);
+    sprintf(buf, "Temp: %03s ", coolantTemp);
     tft.fillRect(0,0, 400, 100, BLACK);
     tft.print(buf);
     delay(50);

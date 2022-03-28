@@ -12,15 +12,10 @@ devices = find_liquidctl_devices()
 
 
 def write_read(x):
-    arduino.write(bytes(x, 'utf-8'))
+    arduino.write(bytes(x, 'utf-8') + '/n')
     time.sleep(0.05)
-    if arduino.isOpen():
-        data = arduino.readline()
-        return data.decode("utf-8")
-
-
-def write(x):
-    arduino.write(bytes(x, 'utf-8'))
+    data = arduino.readline()
+    return data.decode("utf-8")
 
 
 for dev in devices:
@@ -62,7 +57,7 @@ for dev in devices:
         print()  # add a blank line between each device
 device.connect()
 while True:
-    num = str(device._get_temp(0))  # Taking input from user
+    num = str(device._get_temp(0))
     print(write_read(num))
     print(num)
     # time.sleep(0.5)
