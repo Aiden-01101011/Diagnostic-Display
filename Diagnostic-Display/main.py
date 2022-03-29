@@ -12,7 +12,7 @@ devices = find_liquidctl_devices()
 
 
 def write_read(x):
-    arduino.write(bytes(x, 'utf-8') + '/n')
+    arduino.write(bytes(x, 'utf-8') + '\n')
     time.sleep(0.05)
     data = arduino.readline()
     return data.decode("utf-8")
