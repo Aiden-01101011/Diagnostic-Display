@@ -8,11 +8,12 @@ MCUFRIEND_kbv tft;
 #define WHITE   0xFFFF
 #define GREY    0x8410
 
+const int numDev = 0;
+
 
 
 
 String coolantTemp = "";
-char buff[6];
 char buf[20];
 
 void setup() {
@@ -32,11 +33,16 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 0){
-    coolantTemp = Serial.readStringUntil('\n')
-    Serial.print(coolantTemp);
-    tft.setCursor(0, 0);
-    sprintf(buf, "Temp: %03s ", coolantTemp);
     tft.fillRect(0,0, 400, 100, BLACK);
+    displaySerial(0, 0, "Temp: ");
+  }
+  
+  
+  void displaySerial(int x, int y, char* prefix){
+    char[20] messsage = Serial.readStringUntil('\n');
+    Serial.print(message);
+    tft.setCursor(x, y);
+    sprintf(buf, "%03s %03s ",prefix , message);
     tft.print(buf);
     delay(50);
   }
