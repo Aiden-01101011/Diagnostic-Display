@@ -3,7 +3,7 @@ from liquidctl import find_liquidctl_devices
 import serial
 
 
-arduino = serial.Serial(port='COM10', baudrate=115200, timeout=3)
+arduino = serial.Serial(port='COM10', baudrate=115200, timeout=1)
 
 first = True
 
@@ -14,9 +14,8 @@ devices = find_liquidctl_devices()
 def write_read(x):
     arduino.write(bytes(x, 'utf-8'))
     time.sleep(0.05)
-    if arduino.isOpen():
-        data = arduino.readline()
-        return data.decode("utf-8")
+    data = arduino.readline()
+    return data.decode("utf-8")
 
 
 def write(x):
@@ -62,7 +61,8 @@ for dev in devices:
         print()  # add a blank line between each device
 device.connect()
 while True:
-    num = str(device._get_temp(0))  # Taking input from user
-    print(write_read(num))
-    print(num)
-    # time.sleep(0.5)
+    if arduino.isOpen():
+        num = str(device._get_temp(0))  # Taking input from user
+        print(write_read(num))
+        print(num + ' python')
+        time.sleep(3)
