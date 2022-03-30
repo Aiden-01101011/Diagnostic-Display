@@ -7,25 +7,25 @@ MCUFRIEND_kbv tft;
 #define GREEN   0x07E0
 #define WHITE   0xFFFF
 #define GREY    0x8410
-
-const int numDev = 0;
-
+#define TEXT_SIZE 6
 
 
-
-String coolantTemp = "";
+int devCount = 2;
+float coolantTemp = 0;
+int x1, y1, w, h;
+char buff[5];
 char buf[20];
 
 void setup() {
   Serial.begin(115200);
-  Serial.setTimeout(3);
+  Serial.setTimeout(1);
 
   uint16_t ID = tft.readID();
   if (ID == 0xD3D3) ID = 0x9481; //force ID if write-only display
   tft.begin(ID);
   tft.setRotation(3);
   tft.setTextColor(WHITE);
-  tft.setTextSize(6);
+  tft.setTextSize(TEXT_SIZE);
   tft.setFont(NULL);
   tft.setCursor(0, 0);
   tft.fillScreen(BLACK);
@@ -33,17 +33,19 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 0){
-    tft.fillRect(0,0, 400, 100, BLACK);
-    displaySerial(0, 0, "Temp: ");
+    for(int i; i < devCount; i++){
+      displayFloat(i * (TEXT_SIZE * 8), 0, "Temp: ")
+    }
+    delay(3000);
   }
-  
-  
-  void displaySerial(int x, int y, char* prefix){
-    char[20] messsage = Serial.readStringUntil('\n');
-    Serial.print(message);
+}
+void displayFloat(int x, int y, char* prefix){
+    float val = Serial.readStringUntil('\n').toFloat();
+    dtostrf(val, -2, 2, buff);
+    Serial.print(val + String("\n"));
     tft.setCursor(x, y);
-    sprintf(buf, "%03s %03s ",prefix , message);
+    sprintf(buf, "%03s %03s", prefix, buff);
+    tft.getTextBounds(buf, x, y, x1, y1, w, h);
+    tft.fillRect(x, y, w, h, BLACK);
     tft.print(buf);
-    delay(50);
-  }
 }
